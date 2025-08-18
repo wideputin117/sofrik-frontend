@@ -1,17 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Pagination } from "./projectSlice";
-import { addTask } from "../actions/taskAction";
+import { addTask, getTasksByProject, updateTask } from "../actions/taskAction";
 import toast from "react-hot-toast";
 
-export interface Tasks{
-
-}
-interface InitialState{
-    isLoading:boolean,
-    isSuccess:boolean,
-    isError:boolean,
-    tasks:Tasks[],
-    paginate:Pagination
+export interface Tasks {}
+interface InitialState {
+  isLoading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  tasks: Tasks[];
+  paginate: Pagination;
 }
 
 const initialState: InitialState = {
@@ -27,29 +25,57 @@ const initialState: InitialState = {
   },
 };
 
-
 const taskSliceCreate = createSlice({
-    name:"task",
-    initialState,
-    reducers:{},
-    extraReducers:(builder)=>{
-        builder
-        .addCase(addTask.pending,state=>{
-            state.isLoading=true
-        })
-        .addCase(addTask.rejected,state=>{
-            state.isError=true
-            state.isSuccess=false
-            state.isLoading=false
-            toast.error('Error in adding the task')
-        })
-        .addCase(addTask.fulfilled,state=>{
-            state.isLoading=false
-            state.isError=false
-            state.isSuccess=true
-            toast('Task Added successfully')
-        })
-    }
-})
+  name: "task",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(addTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addTask.rejected, (state) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.isLoading = false;
+        toast.error("Error in adding the task");
+      })
+      .addCase(addTask.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        toast("Task Added successfully");
+      })
+      .addCase(updateTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateTask.rejected, (state) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+      })
+      .addCase(updateTask.fulfilled, (state) => {
+        state.isError = false;
+        state.isSuccess = true;
+        state.isLoading = false;
+        toast("Task Updated Successfully");
+      })
+      .addCase(getTasksByProject.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getTasksByProject.rejected, (state) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.tasks = [];
+      })
+      .addCase(getTasksByProject.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.tasks = action.payload.data;
+      });
+  },
+});
 
-export default taskSliceCreate.reducer
+export default taskSliceCreate.reducer;
