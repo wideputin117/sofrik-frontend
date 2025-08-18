@@ -49,7 +49,7 @@ export const createProject = createAsyncThunk(
 
 export const updateProject = createAsyncThunk(
   "update/project",
-  async (projectdata: Project, { rejectWithValue }) => {
+  async (projectdata: Partial<Project>, { rejectWithValue }) => {
     try {
       const { _id } = projectdata;
       const { data } = await axiosInstance.patch(
