@@ -1,8 +1,10 @@
 'use client'
 
+import { useAppDispatch } from "@/lib/hooks/dispatchHook";
+import { registerUser } from "@/lib/redux/actions/authAction";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-type SignupFormInputs = {
+export type SignupFormInputs = {
   name: string;
   email: string;
   password: string;
@@ -10,15 +12,15 @@ type SignupFormInputs = {
 };
 
 const SignupForm = () => {
+  const dispatch = useAppDispatch()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SignupFormInputs>();
 
-  // You will attach your own handler later
-  const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
-    console.log(data);
+   const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
+      dispatch(registerUser(data))
   };
 
   return (

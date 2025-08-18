@@ -1,5 +1,8 @@
 'use client'
 
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/dispatchHook";
+import { loginUser } from "@/lib/redux/actions/authAction";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type LoginFormInputs = {
@@ -8,16 +11,20 @@ type LoginFormInputs = {
 };
 
 const Page = () => {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormInputs>();
-
+   const dispatch = useAppDispatch()
+   const { isLoggedIn } = useAppSelector(state=> state.auth)
    const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    console.log(data);
-  };
-
+    dispatch(loginUser(data))
+   };
+   if(isLoggedIn){
+     router.push(`/`)
+   }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-md">
