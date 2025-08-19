@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/dispatchHook";
 import { loginUser } from "@/lib/redux/actions/authAction";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -64,6 +65,9 @@ const Page = () => {
             Login
           </button>
         </form>
+        <div>
+          <Link href={`/signup`}><span className="text-xl text-blue-400">New User Signup</span></Link>
+        </div>
       </div>
     </div>
   );

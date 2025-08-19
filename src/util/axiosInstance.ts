@@ -5,4 +5,4 @@ const baseUrl = process.env.NEXT_PUBLIC_ENV == 'development' ? process.env.NEXT_
 export const axiosInstance = axios.create({
     baseURL:baseUrl,
     withCredentials:true
-})
+})  

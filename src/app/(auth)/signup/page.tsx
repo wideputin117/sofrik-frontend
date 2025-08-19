@@ -1,7 +1,8 @@
 'use client'
 
-import { useAppDispatch } from "@/lib/hooks/dispatchHook";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/dispatchHook";
 import { registerUser } from "@/lib/redux/actions/authAction";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 export type SignupFormInputs = {
@@ -18,11 +19,14 @@ const SignupForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignupFormInputs>();
-
+const { isSuccess } = useAppSelector(state=> state.auth)
    const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
       dispatch(registerUser(data))
   };
-
+  const router = useRouter()
+  if(isSuccess){
+    router.push(`/login`)    
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-md">
