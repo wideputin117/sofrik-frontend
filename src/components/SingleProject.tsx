@@ -67,6 +67,7 @@ import { getProjectById } from "@/lib/redux/actions/projectAction"
 import TaskList from "./TaskList"
 import AddTask from "./AddTask"
 import UpdateProjectModal from "./UpdateProject"
+import GuardRoute from "./GaurdRouteComponent"
 
 const SingleProject = ({ id }: { id: string }) => {
   const dispatch = useAppDispatch()
@@ -86,6 +87,7 @@ const SingleProject = ({ id }: { id: string }) => {
 
   return (
     <div className="p-6 space-y-6">
+      <GuardRoute />
        <div className="bg-white rounded-xl shadow-md p-6 border">
         <h1 className="text-3xl font-bold text-gray-900">
           Project: <span className="text-blue-600">{project?.title}</span>

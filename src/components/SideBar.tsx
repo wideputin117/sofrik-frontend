@@ -12,7 +12,7 @@ const SideBar = () => {
     { name: "Add Project", href: "/projects/add" },
   ]
 
-  if(isLoggedIn){
+ 
  
   return (
     <aside className="w-60 min-h-screen bg-gray-900 text-gray-100 flex flex-col shadow-lg">
@@ -40,9 +40,7 @@ const SideBar = () => {
       </nav>
     </aside>
   )
-  }else{
-    return null
-  }
+  
   
 }
 

@@ -1,9 +1,13 @@
+'use client'
+
 import Link from "next/link";
 import { ProjectListing } from "@/components/ProjectListing";
+import GuardRoute from "@/components/GaurdRouteComponent";
 
 const Page = () => {
   return (
     <div className="p-6">
+      <GuardRoute />
        <div className="flex justify-end mb-4">
         <Link
           href="/projects/add"

@@ -1,5 +1,6 @@
 "use client"
 
+import GuardRoute from "@/components/GaurdRouteComponent"
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/dispatchHook"
 import { createProject } from "@/lib/redux/actions/projectAction"
 import { useForm } from "react-hook-form"
@@ -36,6 +37,7 @@ const Page = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <GuardRoute />
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
         {/* Header */}
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
