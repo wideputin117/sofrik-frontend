@@ -1,7 +1,7 @@
-export const page = () => {
+export default function Page() {
   return (
     <div>
-        Loading your Dashboard
+      Loading your Dashboard
     </div>
   )
 }
