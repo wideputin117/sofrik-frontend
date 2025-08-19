@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form"
 import { useAppDispatch } from "@/lib/hooks/dispatchHook"
-import { updateProject } from "@/lib/redux/actions/projectAction"
+import { getProjectById, updateProject } from "@/lib/redux/actions/projectAction"
 import { Project } from "@/lib/redux/slice/projectSlice"
 import { useState } from "react"
 
@@ -26,6 +26,7 @@ const UpdateProjectModal = ({ project, onClose }: Props) => {
   const onSubmit = async (data: Partial<Project>) => {
     setLoading(true)
     await dispatch(updateProject(data))
+    await dispatch(getProjectById(project?._id))
     setLoading(false)
     onClose()
   }

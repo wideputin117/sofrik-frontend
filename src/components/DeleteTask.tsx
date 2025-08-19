@@ -6,13 +6,15 @@ import { deleteTask } from "@/lib/redux/actions/taskAction"
 interface ConfirmDeleteTaskProps {
   taskId: string
   onClose: () => void
+  callBack:()=>void
 }
 
-const ConfirmDeleteTask = ({ taskId, onClose }: ConfirmDeleteTaskProps) => {
+const ConfirmDeleteTask = ({ taskId, onClose, callBack }: ConfirmDeleteTaskProps) => {
   const dispatch = useAppDispatch()
 
   const handleDelete = () => {
     dispatch(deleteTask(taskId))
+    callBack()
     onClose()
   }
 

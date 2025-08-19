@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 interface UpdateTaskProps {
   task: any
   onClose: () => void
+  callBack:()=> void
 }
 
 interface TaskFormData {
@@ -16,7 +17,7 @@ interface TaskFormData {
   status: "todo" | "in-progress" | "done"
 }
 
-const UpdateTask = ({ task, onClose }: UpdateTaskProps) => {
+const UpdateTask = ({ task, onClose, callBack}: UpdateTaskProps) => {
   const dispatch = useAppDispatch()
   const { register, handleSubmit } = useForm<TaskFormData>({
     defaultValues: {
@@ -29,6 +30,7 @@ const UpdateTask = ({ task, onClose }: UpdateTaskProps) => {
 
   const onSubmit = (data: TaskFormData) => {
     dispatch(updateTask({ taskId: task._id, data }))
+    callBack()
     onClose()
   }
 

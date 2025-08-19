@@ -5,22 +5,40 @@ import { getTasksByProject } from "@/lib/redux/actions/taskAction"
 import { useEffect, useState } from "react"
 import UpdateTask from "./updateTask"
 import ConfirmDeleteTask from "./DeleteTask"
+import { removeNewTaskAdded } from "@/lib/redux/slice/taskSlice"
 
 const TaskList = ({ projectId }: { projectId: string }) => {
   const dispatch = useAppDispatch()
-  const { tasks, isLoading } = useAppSelector(state => state.task)
+  const { tasks, isLoading,paginate, newTaskAdded } = useAppSelector(state => state.task)
   const [status, setStatus] = useState<string | "">("")
   const [selectedTask, setSelectedTask] = useState<any | null>(null)
   const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [callAgain,setCallAgain]= useState<boolean>(false)  
+
+
+  const handlePageChange = (page: number) => {
+    if (page > 0 && page <= paginate?.totalPages) {
+      setCurrentPage(page)
+    }
+  }
 
   useEffect(() => {
-    dispatch(getTasksByProject({ projectId, status: status || undefined }))
-  }, [projectId, status, dispatch])
+    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:1 }))
+  }, [projectId, status, dispatch,currentPage])
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatus(e.target.value)
   }
-
+  
+  if(callAgain){
+    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:1 }))
+    setCallAgain(false)
+  }
+  if(newTaskAdded){
+    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:1 }))
+    dispatch(removeNewTaskAdded())
+  }
   return (
     <div className="p-4 border rounded-md">
       <div className="mb-4 flex items-center gap-3">
@@ -68,15 +86,48 @@ const TaskList = ({ projectId }: { projectId: string }) => {
         ))}
       </ul>
 
-      {/* Update Modal */}
-      {selectedTask && (
-        <UpdateTask task={selectedTask} onClose={() => setSelectedTask(null)} />
+       {selectedTask && (
+        <UpdateTask task={selectedTask} onClose={() => setSelectedTask(null)} callBack={()=> setCallAgain(true)} />
       )}
 
-      {/* Delete Confirmation Modal */}
-      {deleteTaskId && (
-        <ConfirmDeleteTask taskId={deleteTaskId} onClose={() => setDeleteTaskId(null)} />
+       {deleteTaskId && (
+        <ConfirmDeleteTask taskId={deleteTaskId} onClose={() => setDeleteTaskId(null)} callBack={()=> setCallAgain(true)} />
       )}
+
+
+      {/** paginate */}
+      
+          {paginate?.totalPages >= 1 && (
+            <div className="flex justify-center items-center gap-2 mt-6">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 border rounded disabled:opacity-50"
+              >
+                Prev
+              </button>
+
+              {[...Array(paginate.totalPages)].map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handlePageChange(idx + 1)}
+                  className={`px-3 py-1 border rounded ${
+                    currentPage === idx + 1 ? "bg-blue-500 text-white" : ""
+                  }`}
+                >
+                  {idx + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === paginate.totalPages}
+                className="px-3 py-1 border rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
     </div>
   )
 }

@@ -1,8 +1,10 @@
 'use client'
 
-import { useAppDispatch } from "@/lib/hooks/dispatchHook"
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/dispatchHook"
 import { addTask } from "@/lib/redux/actions/taskAction"
+import { manageTask } from "@/lib/redux/slice/taskSlice"
 import { useForm } from "react-hook-form"
+import toast from "react-hot-toast"
 
 interface AddTaskProps {
   projectId: string
@@ -19,11 +21,13 @@ interface TaskFormData {
 const AddTask = ({ projectId, onClose }: AddTaskProps) => {
   const dispatch = useAppDispatch()
   const { register, handleSubmit, formState: { errors } } = useForm<TaskFormData>()
-
+  const { isSuccess } = useAppSelector(state=> state.task)
   const onSubmit = (data: TaskFormData) => {
     dispatch(addTask({ ...data, projectId }))
+    dispatch(manageTask())
     onClose()  
-}
+  
+ }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">

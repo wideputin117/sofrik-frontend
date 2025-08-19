@@ -10,6 +10,7 @@ interface InitialState {
   isError: boolean;
   tasks: Tasks[];
   paginate: Pagination;
+  newTaskAdded: boolean;
 }
 
 const initialState: InitialState = {
@@ -23,12 +24,20 @@ const initialState: InitialState = {
     limit: 0,
     page: 0,
   },
+  newTaskAdded: false,
 };
 
 const taskSliceCreate = createSlice({
   name: "task",
   initialState,
-  reducers: {},
+  reducers: {
+    manageTask: (state) => {
+      state.newTaskAdded = true;
+    },
+     removeNewTaskAdded:(state)=>{
+      state.newTaskAdded= false
+     }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(addTask.pending, (state) => {
@@ -74,8 +83,9 @@ const taskSliceCreate = createSlice({
         state.isSuccess = false;
         state.isError = true;
         state.tasks = action.payload.data;
+        state.paginate = action.payload.paginate;
       });
   },
 });
-
+export const { manageTask, removeNewTaskAdded } = taskSliceCreate.actions;
 export default taskSliceCreate.reducer;

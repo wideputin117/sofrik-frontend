@@ -74,13 +74,13 @@ let config = {
 export const getTasksByProject = createAsyncThunk(
   "task/getTasksByProject",
   async (
-    { projectId, status }: { projectId: string; status?: string },
+    { projectId, status,page,limit }: { projectId: string; status?: string, page?:number, limit?:number },
     { rejectWithValue }
   ) => {
     try {
-      const query = status ? `?status=${status}` : "";
-      const {data} = await axiosInstance.get(
-        `/api/v1/task/${projectId}${query}`
+      const query = status ? `${status}` : "";
+      const { data } = await axiosInstance.get(
+        `/api/v1/task/${projectId}?status=${query}&page=${page}&limit=${limit}`
       );
       return data;
     } catch (error: any) {
