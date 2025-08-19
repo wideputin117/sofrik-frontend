@@ -1,122 +1,7 @@
-// 'use client'
-
-// import { useAppDispatch, useAppSelector } from "@/lib/hooks/dispatchHook"
-// import { getProjects } from "@/lib/redux/actions/projectAction"
-// import { useEffect, useState } from "react"
-// import AddTask from "./AddTask"
-// import Link from "next/link"
-
-// export const ProjectListing = () => {
-//   const dispatch = useAppDispatch()
-//   const { projects, isLoading, paginate } = useAppSelector(state => state.project)
-//   const [currentPage, setCurrentPage] = useState<number>(1)
-//   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
-
-//   const handlePageChange = (page: number) => {
-//     if (page > 0 && page <= paginate?.totalPages) {
-//       setCurrentPage(page)
-//     }
-//   }
-
-//   useEffect(() => {
-//     dispatch(getProjects({ page: currentPage, limit: 10 }))
-//   }, [dispatch, currentPage])
-
-//   if (isLoading) {
-//     return <span>Loading please wait...</span>
-//   }
-
-//   return (
-//     <div className="p-4">
-//       {projects?.length > 0 ? (
-//         <div className="space-y-6">
-//           <div className="grid gap-4">
-//             {projects.map((project: any) => (
-//               <div
-//                 key={project._id}
-//                 className="border rounded-lg p-4 shadow-sm bg-white"
-//               >
-//                 <div>
-//                 <h2 className="text-lg font-semibold">{project.title}</h2>
-//                 <Link href={`/projects/${project?._id}`}>
-//                       <button className="text-lg font-semibold">View Details</button>
-//                 </Link>
-//                  </div>
-//                  <p className="text-gray-600">{project.description}</p>
-//                 <p className="text-sm text-blue-600">
-//                   Status: <span className="font-medium">{project.status}</span>
-//                 </p>
-//                 <p className="text-xs text-gray-400">
-//                   Last updated: {new Date(project.updatedAt).toLocaleString()}
-//                 </p>
-
-//                 {project.tasks?.length > 0 && (
-//                   <ul className="list-disc pl-6 mt-2 text-sm text-gray-700">
-//                     {project.tasks.map((task: any, idx: number) => (
-//                       <li key={idx}>{task.title ?? "Untitled Task"}</li>
-//                     ))}
-//                   </ul>
-//                 )}
-
-//                 <button
-//                   onClick={() => setSelectedProjectId(project._id)}
-//                   className="mt-3 px-3 py-1 text-sm bg-green-600 text-white rounded"
-//                 >
-//                   + Add Task
-//                 </button>
-//               </div>
-//             ))}
-//           </div>
-
-//           {paginate?.totalPages >= 1 && (
-//             <div className="flex justify-center items-center gap-2 mt-6">
-//               <button
-//                 onClick={() => handlePageChange(currentPage - 1)}
-//                 disabled={currentPage === 1}
-//                 className="px-3 py-1 border rounded disabled:opacity-50"
-//               >
-//                 Prev
-//               </button>
-
-//               {[...Array(paginate.totalPages)].map((_, idx) => (
-//                 <button
-//                   key={idx}
-//                   onClick={() => handlePageChange(idx + 1)}
-//                   className={`px-3 py-1 border rounded ${
-//                     currentPage === idx + 1 ? "bg-blue-500 text-white" : ""
-//                   }`}
-//                 >
-//                   {idx + 1}
-//                 </button>
-//               ))}
-
-//               <button
-//                 onClick={() => handlePageChange(currentPage + 1)}
-//                 disabled={currentPage === paginate.totalPages}
-//                 className="px-3 py-1 border rounded disabled:opacity-50"
-//               >
-//                 Next
-//               </button>
-//             </div>
-//           )}
-//         </div>
-//       ) : (
-//         <span>No Projects</span>
-//       )}
-
-//        {selectedProjectId && (
-//         <AddTask
-//           projectId={selectedProjectId}
-//           onClose={() => setSelectedProjectId(null)}
-//         />
-//       )}
-//     </div>
-//   )
-// }
 'use client'
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/dispatchHook"
-import { getProjects } from "@/lib/redux/actions/projectAction"
+import { deleteProject, getProjects } from "@/lib/redux/actions/projectAction"
 import { useEffect, useState } from "react"
 import AddTask from "./AddTask"
 import Link from "next/link"
@@ -126,6 +11,7 @@ export const ProjectListing = () => {
   const { projects, isLoading, paginate } = useAppSelector(state => state.project)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
+  const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null) // modal state
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= paginate?.totalPages) {
@@ -136,6 +22,14 @@ export const ProjectListing = () => {
   useEffect(() => {
     dispatch(getProjects({ page: currentPage, limit: 10 }))
   }, [dispatch, currentPage])
+
+  const handleDelete = async () => {
+    if (deleteProjectId) {
+      await dispatch(deleteProject(deleteProjectId))
+      await dispatch(getProjects({ page: currentPage, limit: 10 }))
+      setDeleteProjectId(null)
+    }
+  }
 
   if (isLoading) {
     return <span className="text-gray-500">Loading please wait...</span>
@@ -188,6 +82,12 @@ export const ProjectListing = () => {
                 >
                   + Add Task
                 </button>
+                <button
+                  onClick={() => setDeleteProjectId(project?._id)}
+                  className="px-3 py-1 bg-red-600 text-white rounded shadow hover:bg-red-700 transition"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
@@ -233,6 +133,32 @@ export const ProjectListing = () => {
           projectId={selectedProjectId}
           onClose={() => setSelectedProjectId(null)}
         />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteProjectId && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h3 className="text-lg font-semibold text-gray-900">Confirm Delete</h3>
+            <p className="mt-2 text-gray-600">
+              Are you sure you want to delete this project? This action cannot be undone.
+            </p>
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                onClick={() => setDeleteProjectId(null)}
+                className="px-4 py-2 border rounded hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
