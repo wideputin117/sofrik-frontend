@@ -24,7 +24,7 @@ const TaskList = ({ projectId }: { projectId: string }) => {
   }
 
   useEffect(() => {
-    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:1 }))
+    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:5 }))
   }, [projectId, status, dispatch,currentPage])
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -32,11 +32,11 @@ const TaskList = ({ projectId }: { projectId: string }) => {
   }
   
   if(callAgain){
-    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:1 }))
+    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:5 }))
     setCallAgain(false)
   }
   if(newTaskAdded){
-    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:1 }))
+    dispatch(getTasksByProject({ projectId, status: status || undefined, page:currentPage,limit:5 }))
     dispatch(removeNewTaskAdded())
   }
   return (
