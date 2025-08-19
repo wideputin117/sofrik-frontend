@@ -5,6 +5,7 @@ import { ReduxProvider } from "@/lib/redux/provider";
 import { Toaster } from "react-hot-toast";
 import Header from "@/components/layout/Header";
 import ProtectRoute from "@/components/GaurdRouteComponent";
+import SideBar from "@/components/SideBar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+ <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -34,9 +35,15 @@ export default function RootLayout({
           <ProtectRoute />
           <Header />
           <Toaster />
-        {children}
+          <div className="flex">
+             <SideBar />
+
+             <main className="flex-1 p-6 bg-gray-50 min-h-screen">
+              {children}
+            </main>
+          </div>
         </ReduxProvider>
-       </body>
+      </body>
     </html>
   );
 }

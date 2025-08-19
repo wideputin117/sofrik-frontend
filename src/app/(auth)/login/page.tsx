@@ -19,7 +19,7 @@ const Page = () => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
    const dispatch = useAppDispatch()
-   const { isLoggedIn } = useAppSelector(state=> state.auth)
+   const { isLoggedIn, isLoading } = useAppSelector(state=> state.auth)
    const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
     dispatch(loginUser(data))
    };
@@ -60,13 +60,19 @@ const Page = () => {
 
            <button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
           >
-            Login
+            {isLoading ? 'Logging you in...':'Login' }
           </button>
         </form>
-        <div>
-          <Link href={`/signup`}><span className="text-xl text-blue-400">New User Signup</span></Link>
+        <div className="flex justify-center mt-8">
+          <Link
+            href="/signup"
+            className="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold text-lg shadow-md hover:from-blue-600 hover:to-blue-800 transition-all duration-300"
+          >
+            New User Signup
+          </Link>
         </div>
       </div>
     </div>

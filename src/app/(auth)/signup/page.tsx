@@ -19,7 +19,7 @@ const SignupForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignupFormInputs>();
-const { isSuccess } = useAppSelector(state=> state.auth)
+const { isSuccess, isLoading } = useAppSelector(state=> state.auth)
    const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
       dispatch(registerUser(data))
   };
@@ -90,9 +90,10 @@ const { isSuccess } = useAppSelector(state=> state.auth)
    
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
           >
-            Sign Up
+            {isLoading ? "Registering you":'Sign Up'}
           </button>
         </form>
       </div>
