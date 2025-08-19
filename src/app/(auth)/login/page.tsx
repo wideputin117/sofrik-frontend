@@ -24,7 +24,7 @@ const Page = () => {
     dispatch(loginUser(data))
    };
    if(isLoggedIn){
-     router.push(`/`)
+     router.push(`/projects`)
    }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
