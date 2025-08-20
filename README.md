@@ -31,3 +31,4 @@ Frontend for the **Sofrik Task Management App**, built with **Next.js, React, Re
 git clone https://github.com/wideputin117/sofrik-frontend.git
 cd sofrik-frontend
 npm install
+npm run dev
